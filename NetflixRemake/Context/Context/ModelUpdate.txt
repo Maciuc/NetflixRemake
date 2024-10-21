@@ -1,1 +1,0 @@
-Scaffold-DbContext "Server=DESKTOP-752MQUO;Database=NetflixRemake;Trusted_Connection=True;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -o Entities -ContextDir Context -Context NetflixRemakeContext -force
