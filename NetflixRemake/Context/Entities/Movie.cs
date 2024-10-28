@@ -1,4 +1,4 @@
-﻿namespace Context.Entities
+﻿namespace Infrastructure.Entities
 {
     public partial class Movie
     {

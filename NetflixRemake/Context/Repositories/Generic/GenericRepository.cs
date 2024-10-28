@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Context.Repositories.Generic
+namespace Infrastructure.Repositories.Generic
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class

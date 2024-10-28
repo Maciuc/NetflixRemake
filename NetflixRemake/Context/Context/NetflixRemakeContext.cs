@@ -1,7 +1,7 @@
-﻿using Context.Entities;
+﻿using Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Context.Context
+namespace Infrastructure.Context
 {
     public partial class NetflixRemakeContext : DbContext
     {

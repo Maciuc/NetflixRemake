@@ -1,7 +1,7 @@
-﻿using Context.Entities;
-using Context.Repositories.Generic;
+﻿using Infrastructure.Entities;
+using Infrastructure.Repositories.Generic;
 
-namespace Context.Repositories.Movies
+namespace Infrastructure.Repositories.Movies
 {
     public interface IMovieRepository : IGenericRepository<Movie>
     {

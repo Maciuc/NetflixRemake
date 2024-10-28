@@ -1,7 +1,9 @@
-﻿namespace Services.Movies
+﻿using NetflixRemake.Models;
+
+namespace Services.Movies
 {
     public interface IMovieService
     {
-        Task AddPlayer(CreateMovieViewModel model);
+        Task AddMovie(CreateMovieViewModel model);
     }
 }

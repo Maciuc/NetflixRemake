@@ -3,14 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetflixRemake", "NetflixRemake\NetflixRemake.csproj", "{4B261F11-D021-4234-8419-13F3218C7640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend", "NetflixRemake\Backend.csproj", "{4B261F11-D021-4234-8419-13F3218C7640}"
 	ProjectSection(ProjectDependencies) = postProject
-		{7BEAA3DD-8EB8-478C-A149-3B21FD5884B8} = {7BEAA3DD-8EB8-478C-A149-3B21FD5884B8}
+		{9D622051-29D3-421A-B713-FB38B3894339} = {9D622051-29D3-421A-B713-FB38B3894339}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Context", "Context\Context.csproj", "{7BEAA3DD-8EB8-478C-A149-3B21FD5884B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Context\Infrastructure.csproj", "{7BEAA3DD-8EB8-478C-A149-3B21FD5884B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{9D622051-29D3-421A-B713-FB38B3894339}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{9D622051-29D3-421A-B713-FB38B3894339}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7BEAA3DD-8EB8-478C-A149-3B21FD5884B8} = {7BEAA3DD-8EB8-478C-A149-3B21FD5884B8}
+		{AE868978-4BB8-4AED-A223-36368752F8FA} = {AE868978-4BB8-4AED-A223-36368752F8FA}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{AE868978-4BB8-4AED-A223-36368752F8FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +36,10 @@ Global
 		{9D622051-29D3-421A-B713-FB38B3894339}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D622051-29D3-421A-B713-FB38B3894339}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D622051-29D3-421A-B713-FB38B3894339}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE868978-4BB8-4AED-A223-36368752F8FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE868978-4BB8-4AED-A223-36368752F8FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE868978-4BB8-4AED-A223-36368752F8FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE868978-4BB8-4AED-A223-36368752F8FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
