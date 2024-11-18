@@ -1,4 +1,4 @@
-using AutoMapper;
+/*using AutoMapper;
 using Infrastructure.Context;
 using Infrastructure.Repositories.Movies;
 using Microsoft.AspNetCore.Mvc;
@@ -83,9 +83,105 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
+        pattern: "{controller=Movie}/{action=Index}/{id?}");
 });
 //app.UseAuthentication();
 //app.UseAuthorization();
 
+app.Run();
+*/
+
+
+
+using AutoMapper;
+using Infrastructure.Context;
+using Infrastructure.Repositories.Movies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Services.Movies;
+using System.Text.Json.Serialization;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// 1. Conectare la baza de date
+var connectionString = builder.Configuration.GetConnectionString("ConnectionString");
+builder.Services.AddDbContext<NetflixRemakeContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// 2. Configurarea de caching
+builder.Services.AddResponseCaching();
+
+// 3. Ad?ugarea MVC
+builder.Services.AddControllersWithViews(options =>
+{
+    var cacheProfiles = builder.Configuration
+        .GetSection("CacheProfiles")
+        .GetChildren();
+    foreach (var cacheProfile in cacheProfiles)
+    {
+        options.CacheProfiles
+        .Add(cacheProfile.Key,
+        cacheProfile.Get<CacheProfile>());
+    }
+})
+.AddJsonOptions(x =>
+{
+    // serialize enums as strings in api responses (e.g. Role)
+    x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+// 4. Configurarea AutoMapper pentru mapping
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// 5. Configurarea CORS (Cross-Origin Resource Sharing)
+builder.Services.AddCors();
+builder.Services.AddControllersWithViews()
+            .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+
+// 6. Configurarea Swagger (pentru dezvoltare)
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// 7. Înregistrarea serviciilor pentru repository ?i service
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IMovieService, MovieService>();
+
+var app = builder.Build();
+
+// 8. Configurarea pipeline-ului de request-uri
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseResponseCaching();
+app.UseRouting();
+
+// 9. Permisiuni CORS
+app.UseCors(x => x
+        .SetIsOriginAllowed(origin => true) // Permite toate originile
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
+
+// 10. Configurarea rutei MVC
+app.UseEndpoints(endpoints =>
+{
+    // Definirea rutei standard pentru MVC
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Movie}/{action=Index}/{id?}");
+});
+
+// 11. Rulare aplica?ie
+app.UseStaticFiles(); // Suport pentru fi?iere statice (ex: CSS, JS, imagini)
+app.MapControllers(); // Ruteaz? la controlerele API (dac? ai nevoie)
 app.Run();

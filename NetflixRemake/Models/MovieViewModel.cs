@@ -13,15 +13,15 @@
 
     public class CreateMovieViewModel
     {
-        public string Name { get; set; } = null!;
+        public string? Name { get; set; }
         public string? Description { get; set; }
         public string? VideoPath { get; set; }
-        public int StartPrice { get; set; }
+        public int? StartPrice { get; set; }
     }
 
     public class UpdateMovieViewModel : CreateMovieViewModel
     {
-
+        public int Id { get; set; }
     }
 
 }

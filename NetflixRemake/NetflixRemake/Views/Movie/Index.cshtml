@@ -1,0 +1,32 @@
+﻿@using NetflixRemake.Models
+@model IEnumerable<MovieViewModel>
+
+<h1>Movies List</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Start Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Name</td>
+                <td>@movie.Description</td>
+                <td>@movie.StartPrice</td>
+                <td>
+                    <a href="@Url.Action("Details", "Movie", new { Id = movie.Id })">Details</a> |
+                    <a href="@Url.Action("Edit", "Movie", new { Id = movie.Id })">Edit</a> |
+                    <a href="@Url.Action("Delete", "Movie", new { Id = movie.Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Create", "Movie")">Create New Movie</a>

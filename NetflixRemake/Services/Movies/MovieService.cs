@@ -57,10 +57,39 @@ namespace Services.Movies
                 Name = model.Name,
                 Description = model.Description,
                 VideoPath = model.VideoPath,
-                StartPrice = model.StartPrice,
+                StartPrice = (int)model.StartPrice,
             };
 
             await _movieRepository.Add(movie);
+        }
+
+        public async Task UpdateMovie(int id, CreateMovieViewModel model)
+        {
+            var movie = await _movieRepository.GetAsync(id);
+
+            if (movie == null)
+            {
+                throw new NotFoundException("Movie not found!");
+            }
+
+            movie.Name = model.Name;
+            movie.Description = model.Description;
+            movie.StartPrice = (int)model.StartPrice;
+            movie.VideoPath = model.VideoPath;
+
+            await _movieRepository.Update(movie);
+        }
+
+        public async Task DeleteMovie(int id)
+        {
+            var movie = await _movieRepository.GetAsync(id);
+
+            if (movie == null)
+            {
+                throw new NotFoundException("Movie not found!");
+            }
+
+            await _movieRepository.DeleteAsync(movie);
         }
     }
 }

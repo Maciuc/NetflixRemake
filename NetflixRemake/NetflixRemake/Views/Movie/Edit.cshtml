@@ -1,0 +1,27 @@
+﻿@using NetflixRemake.Models
+@model UpdateMovieViewModel
+
+<h1>Edit Movie</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <div>
+        <label for="Name">Name</label>
+        <input type="text" id="Name" name="Name" value="@Model.Name" required />
+    </div>
+    <div>
+        <label for="Description">Description</label>
+        <textarea id="Description" name="Description" required>@Model.Description</textarea>
+    </div>
+    <div>
+        <label for="StartPrice">Start Price</label>
+        <input type="number" id="StartPrice" name="StartPrice" value="@Model.StartPrice" required />
+    </div>
+    <div>
+        <label for="VideoPath">Video Path</label>
+        <input type="text" id="VideoPath" name="VideoPath" value="@Model.VideoPath" />
+    </div>
+    <button type="submit">Save Changes</button>
+</form>
+
+<a href="@Url.Action("Index", "Movie")">Back to List</a>

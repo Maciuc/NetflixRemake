@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*using Microsoft.AspNetCore.Mvc;
 using NetflixRemake.Models;
 using Services.Movies;
 
@@ -11,7 +11,7 @@ namespace Backend.Controllers
         private readonly IMovieService _movieService;
 
         public MovieController(
-            IMovieService movieService, 
+            IMovieService movieService,
             ILogger<MovieController> logger)
         {
             _movieService = movieService;
@@ -39,3 +39,4 @@ namespace Backend.Controllers
         }
     }
 }
+*/
