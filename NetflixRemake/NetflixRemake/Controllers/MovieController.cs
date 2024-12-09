@@ -1,4 +1,4 @@
-﻿/*using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NetflixRemake.Models;
 using Services.Movies;
 
@@ -39,4 +39,3 @@ namespace Backend.Controllers
         }
     }
 }
-*/

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*using Microsoft.AspNetCore.Mvc;
 using NetflixRemake.Models;
 using NetflixRemake.Models.Helpers;
 using Services.Movies;
@@ -104,3 +104,4 @@ namespace NetflixRemake.Controllers
         }
     }
 }
+*/

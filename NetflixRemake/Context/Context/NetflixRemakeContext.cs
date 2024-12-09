@@ -25,6 +25,10 @@ namespace Infrastructure.Context
         public virtual DbSet<Rating> Ratings { get; set; } = null!;
         public virtual DbSet<UserMovie> UserMovies { get; set; } = null!;
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AspNetRole>(entity =>
