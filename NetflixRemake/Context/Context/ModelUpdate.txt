@@ -1,1 +1,1 @@
-Scaffold-DbContext "Server=(localdb)\Local;Database=NetflixRemake;Trusted_Connection=True;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -o Entities -ContextDir Context -Context NetflixRemakeContext -force
+Scaffold-DbContext "Server=(localdb)\Local;Database=NetflixRemake;Trusted_Connection=True;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -o Entities -ContextDir Context -Context NetflixRemakeContext -NoOnConfiguring -force

@@ -7,6 +7,7 @@
             MoviesOptions = new HashSet<MoviesOption>();
             Ratings = new HashSet<Rating>();
             UserMovies = new HashSet<UserMovie>();
+            ViewsValues = new HashSet<ViewsValue>();
         }
 
         public int Id { get; set; }
@@ -19,5 +20,6 @@
         public virtual ICollection<MoviesOption> MoviesOptions { get; set; }
         public virtual ICollection<Rating> Ratings { get; set; }
         public virtual ICollection<UserMovie> UserMovies { get; set; }
+        public virtual ICollection<ViewsValue> ViewsValues { get; set; }
     }
 }

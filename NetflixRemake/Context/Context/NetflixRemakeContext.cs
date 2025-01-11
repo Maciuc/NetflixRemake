@@ -24,10 +24,7 @@ namespace Infrastructure.Context
         public virtual DbSet<Option> Options { get; set; } = null!;
         public virtual DbSet<Rating> Ratings { get; set; } = null!;
         public virtual DbSet<UserMovie> UserMovies { get; set; } = null!;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-        }
+        public virtual DbSet<ViewsValue> ViewsValues { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -154,6 +151,17 @@ namespace Infrastructure.Context
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__UserMovie__UserI__3B75D760");
+            });
+
+            modelBuilder.Entity<ViewsValue>(entity =>
+            {
+                entity.ToTable("ViewsValue");
+
+                entity.HasOne(d => d.Movie)
+                    .WithMany(p => p.ViewsValues)
+                    .HasForeignKey(d => d.MovieId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ViewsValu__Movie__5CD6CB2B");
             });
 
             OnModelCreatingPartial(modelBuilder);
