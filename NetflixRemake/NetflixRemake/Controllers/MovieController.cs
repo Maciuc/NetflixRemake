@@ -52,18 +52,10 @@ namespace Backend.Controllers
             return Ok("View values updated successfully!");
         }
 
-
         [HttpDelete("deleteMovie")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
             await _movieService.DeleteMovie(id);
-            return Ok("Movie deleted successfully!");
-        }
-
-        [HttpDelete("physicalDeleteMovie")]
-        public async Task<IActionResult> PhysicalDeleteMovie(int id)
-        {
-            await _movieService.PhysicalDeleteMovie(id);
             return Ok("Movie deleted successfully!");
         }
     }
