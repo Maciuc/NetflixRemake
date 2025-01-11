@@ -1,4 +1,5 @@
-﻿using Backend.Helpers;
+﻿using Backend.Auth;
+using Backend.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,15 +13,15 @@ namespace Backend.Controller
     public class AccountController : ControllerBase
     {
 
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailService _emailService;
         private readonly IBasicRegisterMethods _basicRegisterMethods;
 
         public AccountController(
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            SignInManager<IdentityUser> signInManager,
+            SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration,
             IEmailService emailService,
             IBasicRegisterMethods basicRegisterMethods)
@@ -42,7 +43,7 @@ namespace Backend.Controller
                 return StatusCode(StatusCodes.Status409Conflict, "User already exists!");
             }
 
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -71,8 +72,8 @@ namespace Backend.Controller
             var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userEmail = user.Email, code = code }, protocol: Request.Scheme);
             string html = $"To successfully log in, please first confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>\n Your password: " + password;
 
-            _emailService.Send(model.Email, "Confirm your account", html);
-
+            //_emailService.Send(model.Email, "Confirm your account", html);
+            await ConfirmEmail(user.Email, code);
 
             return Ok("User created successfully!");
         }

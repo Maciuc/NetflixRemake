@@ -1,4 +1,6 @@
 using AutoMapper;
+using Backend.Auth;
+using Backend.Data;
 using Backend.Helpers;
 using Infrastructure.Context;
 using Infrastructure.Repositories.Movies;
@@ -21,8 +23,11 @@ var connectionString = builder.Configuration.GetConnectionString("ConnectionStri
 builder.Services.AddDbContext<NetflixRemakeContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                 .AddEntityFrameworkStores<NetflixRemakeContext>()
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                 .AddEntityFrameworkStores<ApplicationDbContext>()
                  .AddDefaultTokenProviders();
 
 builder.Services.AddResponseCaching();
@@ -82,8 +87,6 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 builder.Services.AddScoped<IBasicRegisterMethods, BasicRegisterMethods>();
 builder.Services.AddScoped<IEmailService, EmailService>();

@@ -2,8 +2,8 @@
 using Infrastructure.Repositories.Movies;
 using Infrastructure.Repositories.ViewsValueRepository;
 using Microsoft.EntityFrameworkCore;
-using Models.Helpers;
 using Models;
+using Models.Helpers;
 
 namespace Services.Movies
 {
