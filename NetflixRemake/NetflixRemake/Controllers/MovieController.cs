@@ -37,5 +37,34 @@ namespace Backend.Controllers
             await _movieService.AddMovie(model);
             return Ok("Movie added successfully!");
         }
+
+        [HttpPut("updateMovie")]
+        public async Task<IActionResult> UpdateMovie(UpdateMovieViewModel model)
+        {
+            await _movieService.UpdateMovie(model);
+            return Ok("Movie updated successfully!");
+        }
+
+        [HttpPut("updateViewsValueOfMovie")]
+        public async Task<IActionResult> UpdateViewsValueOfMovie(UpdateViewsValueViewModel model)
+        {
+            await _movieService.UpdateViewsValueOfMovie(model);
+            return Ok("View values updated successfully!");
+        }
+
+
+        [HttpDelete("deleteMovie")]
+        public async Task<IActionResult> DeleteMovie(int id)
+        {
+            await _movieService.DeleteMovie(id);
+            return Ok("Movie deleted successfully!");
+        }
+
+        [HttpDelete("physicalDeleteMovie")]
+        public async Task<IActionResult> PhysicalDeleteMovie(int id)
+        {
+            await _movieService.PhysicalDeleteMovie(id);
+            return Ok("Movie deleted successfully!");
+        }
     }
 }

@@ -7,7 +7,9 @@ namespace Services.Movies
         Task<MovieViewModel> GetMovie(int id);
         Task<List<MovieViewModel>> GetMovies();
         Task AddMovie(CreateMovieViewModel model);
-        Task UpdateMovie(int id, CreateMovieViewModel model);
+        Task UpdateMovie(UpdateMovieViewModel model);
+        Task UpdateViewsValueOfMovie(UpdateViewsValueViewModel model);
         Task DeleteMovie(int id);
+        Task PhysicalDeleteMovie(int id);
     }
 }

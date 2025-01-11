@@ -157,6 +157,8 @@ namespace Infrastructure.Context
             {
                 entity.ToTable("ViewsValue");
 
+                entity.Property(e => e.Value).HasColumnType("decimal(6, 3)");
+
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.ViewsValues)
                     .HasForeignKey(d => d.MovieId)
