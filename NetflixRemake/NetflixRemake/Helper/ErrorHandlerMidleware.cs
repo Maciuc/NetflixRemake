@@ -1,9 +1,9 @@
-﻿using NetflixRemake.Models.Helpers;
+﻿using Models.Helpers;
 using Serilog;
 using System.Net;
 using System.Text.Json;
 
-namespace NetflixRemake.Backend.Helpers
+namespace Backend.Helpers
 {
     public class ErrorHandlerMiddleware
     {

@@ -2,8 +2,8 @@
 using Infrastructure.Repositories.Movies;
 using Infrastructure.Repositories.ViewsValueRepository;
 using Microsoft.EntityFrameworkCore;
-using NetflixRemake.Models;
-using NetflixRemake.Models.Helpers;
+using Models.Helpers;
+using Models;
 
 namespace Services.Movies
 {

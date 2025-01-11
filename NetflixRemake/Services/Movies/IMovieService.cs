@@ -1,4 +1,4 @@
-﻿using NetflixRemake.Models;
+﻿using Models;
 
 namespace Services.Movies
 {

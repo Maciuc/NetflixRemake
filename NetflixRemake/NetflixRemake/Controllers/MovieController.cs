@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NetflixRemake.Models;
+using Models;
 using Services.Movies;
 
 namespace Backend.Controllers

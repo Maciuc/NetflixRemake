@@ -1,4 +1,4 @@
-﻿namespace NetflixRemake.Models
+﻿namespace Models
 {
     public class MovieViewModel
     {

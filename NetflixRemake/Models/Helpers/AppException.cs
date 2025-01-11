@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace NetflixRemake.Models.Helpers
+namespace Models.Helpers
 {
 
     public class NotFoundException : Exception
