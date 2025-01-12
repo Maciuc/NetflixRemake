@@ -7,12 +7,8 @@ export default {
     const response = await axios.get(`${API_URL}/getMovies`);
     return response.data;
   },
-  // async getMovie(id) {
-  //   const response = await axios.get(`${API_URL}/getMovie?id=${id}`);
-  //   return response.data;
-  // },
   async getMovie(id) {
-    const response = await axios.get(`${API_BASE_URL}/getMovie`, {
+    const response = await axios.get(`${API_URL}/getMovie`, {
       params: { id },
     });
     return response.data;
@@ -21,12 +17,11 @@ export default {
     const response = await axios.post(`${API_URL}/addMovie`, movie);
     return response.data;
   },
-  // async updateMovie(movie) {
-  //   const response = await axios.put(`${API_URL}/updateMovie`, movie);
-  //   return response.data;
-  // },
   async updateMovie(movie) {
-    await axios.put(`${API_BASE_URL}/updateMovie`, movie);
+    await axios.put(`${API_URL}/updateMovie`, movie);
+  },
+  async addView(id) {
+    await axios.put(`${API_URL}/addView?id=${id}`);
   },
   async deleteMovie(id) {
     const response = await axios.delete(`${API_URL}/deleteMovie?id=${id}`);

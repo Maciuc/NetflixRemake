@@ -1,6 +1,6 @@
-﻿using Infrastructure.Entities;
+﻿using exp.Services.Generic;
+using Infrastructure.Entities;
 using Infrastructure.Repositories.Movies;
-using Infrastructure.Repositories.ViewsValueRepository;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Helpers;
@@ -10,13 +10,14 @@ namespace Services.Movies
     public class MovieService : IMovieService
     {
         private readonly IMovieRepository _movieRepository;
-        private readonly IViewsValueRepository _viewsValueRepository;
+        private readonly IGenericService _genericService;
 
-        public MovieService(IMovieRepository movieRepository,
-            IViewsValueRepository viewsValueRepository)
+        public MovieService(
+            IMovieRepository movieRepository,
+            IGenericService genericService)
         {
             _movieRepository = movieRepository;
-            _viewsValueRepository = viewsValueRepository;
+            _genericService = genericService;
         }
 
         public async Task<MovieViewModel> GetMovie(int id)
@@ -33,8 +34,12 @@ namespace Services.Movies
                 Id = movie.Id,
                 Name = movie.Name,
                 Description = movie.Description,
-                VideoPath = movie.VideoPath,
-                StartPrice = movie.StartPrice
+                VideoPath = _genericService.CreateImageUrl(movie.VideoPath),
+                StartPrice = movie.StartPrice,
+                CurrentPrice = movie.StartPrice + (float)movie.ViewsValue * (movie.Views / movie.ViewsThreshold),
+                Views = movie.Views,
+                ViewsValue = (float)movie.ViewsValue,
+                ViewsThreshold = movie.ViewsThreshold
             };
 
             return returnMovie;
@@ -49,8 +54,12 @@ namespace Services.Movies
                 Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
-                VideoPath = x.VideoPath,
-                StartPrice = x.StartPrice
+                VideoPath = _genericService.CreateImageUrl(x.VideoPath),
+                StartPrice = x.StartPrice,
+                CurrentPrice = x.StartPrice + (float)x.ViewsValue * (x.Views / x.ViewsThreshold),
+                Views = x.Views,
+                ViewsValue = (float)x.ViewsValue,
+                ViewsThreshold = x.ViewsThreshold
             }).ToListAsync();
 
             return moviesList;
@@ -62,21 +71,13 @@ namespace Services.Movies
             {
                 Name = model.Name,
                 Description = model.Description,
-                VideoPath = model.VideoPath,
-                StartPrice = model.StartPrice
+                VideoPath = _genericService.CreateImagePath(model.ImageBase64, null, "Movies"),
+                StartPrice = model.StartPrice,
+                ViewsValue = (decimal)model.ViewsValue,
+                ViewsThreshold = model.ViewsThreshold
             };
 
             await _movieRepository.Add(movie);
-
-            //We add views value by default (the 100th part of start price for 1000 views)
-            var viewsValue = new ViewsValue()
-            {
-                MovieId = movie.Id,
-                Value = model.StartPrice / 100,
-                ViewsThreshold = 1000
-            };
-
-            await _viewsValueRepository.Add(viewsValue);
         }
 
         public async Task UpdateMovie(UpdateMovieViewModel model)
@@ -90,13 +91,29 @@ namespace Services.Movies
 
             movie.Name = model.Name;
             movie.Description = model.Description;
-            movie.StartPrice = (int)model.StartPrice;
-            movie.VideoPath = model.VideoPath;
+            movie.StartPrice = model.StartPrice;
+            movie.VideoPath = _genericService.UpdateImagePath(model.ImageBase64, movie.VideoPath, "Movie");
+            movie.ViewsValue = (decimal)model.ViewsValue;
+            movie.ViewsThreshold = model.ViewsThreshold;
 
             await _movieRepository.Update(movie);
         }
 
-        public async Task UpdateViewsValueOfMovie(UpdateViewsValueViewModel model)
+        public async Task AddView(int id)
+        {
+            var movie = await _movieRepository.GetAsync(id);
+
+            if (movie == null)
+            {
+                throw new NotFoundException("Movie not found!");
+            }
+
+            movie.Views += 1;
+
+            await _movieRepository.Update(movie);
+        }
+
+        /*public async Task UpdateViewsValueOfMovie(UpdateViewsValueViewModel model)
         {
             var movie = await _movieRepository.GetAsync(model.MovieId);
 
@@ -116,7 +133,7 @@ namespace Services.Movies
             viewsValue.ViewsThreshold = model.ViewsThreshold;
 
             await _viewsValueRepository.Update(viewsValue);
-        }
+        }*/
 
         public async Task DeleteMovie(int id)
         {

@@ -45,12 +45,19 @@ namespace Backend.Controllers
             return Ok("Movie updated successfully!");
         }
 
-        [HttpPut("updateViewsValueOfMovie")]
+        [HttpPut("addView")]
+        public async Task<IActionResult> AddView(int id)
+        {
+            await _movieService.AddView(id);
+            return Ok();
+        }
+
+        /*[HttpPut("updateViewsValueOfMovie")]
         public async Task<IActionResult> UpdateViewsValueOfMovie(UpdateViewsValueViewModel model)
         {
             await _movieService.UpdateViewsValueOfMovie(model);
             return Ok("View values updated successfully!");
-        }
+        }*/
 
         [HttpDelete("deleteMovie")]
         public async Task<IActionResult> DeleteMovie(int id)

@@ -2,37 +2,110 @@
   <div class="movie-list">
     <h1>Movie Management</h1>
     <button class="refresh-btn" @click="fetchMovies">Refresh Movies</button>
-    <MovieForm @movie-added="fetchMovies" />
     <div v-if="movies.length" class="movies-grid">
-      <div class="movie-card" v-for="movie in movies" :key="movie.Id">
+      <div
+        class="movie-card"
+        v-for="movie in movies"
+        :key="movie.Id"
+        @click="incrementViews(movie)"
+      >
         <img
-          v-if="movie.VideoPath"
-          :src="movie.VideoPath"
-          alt="Movie Poster"
+          v-if="movie.videoPath"
+          :src="$utils.ShowDynamicImage(video.VideoPath, 'default-img')"
+          @error="$utils.ShowImageUserNotFoundOnServer"
+          alt=""
           class="movie-image"
         />
         <h2 class="movie-title">{{ movie.Name }}</h2>
         <p class="movie-description">{{ movie.Description }}</p>
-        <p class="movie-price">
-          <strong>Price:</strong> ${{ movie.StartPrice }}
+        <p class="movie-description">
+          <strong>Views: {{ movie.Views }}</strong>
         </p>
-        <button class="edit-btn" @click="editMovie(movie.Id)">Edit</button>
+        <p class="movie-price">
+          <strong>Start price:</strong> ${{ movie.StartPrice }}
+        </p>
+        <p class="movie-price">
+          <strong>Current price:</strong> ${{ movie.CurrentPrice }}
+        </p>
+        <button class="edit-btn" @click="openEditModal(movie)">Edit</button>
         <button class="delete-btn" @click="deleteMovie(movie.Id)">
           Delete
         </button>
       </div>
     </div>
     <p v-else class="no-movies">No movies available.</p>
+
+    <!-- Edit Modal -->
+    <div v-if="isEditModalOpen" class="modal-overlay">
+      <div class="modal-content">
+        <h2>Edit Movie</h2>
+        <form @submit.prevent="submitEditForm" class="form">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input id="name" v-model="selectedMovie.Name" required />
+          </div>
+          <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea
+              id="description"
+              v-model="selectedMovie.Description"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="imageBase64">Image:</label>
+            <input
+              id="imageBase64"
+              type="file"
+              @change="handleEditFileUpload"
+              accept="image/*"
+            />
+            <small v-if="selectedMovie.VideoPath"
+              >Image selected successfully!</small
+            >
+          </div>
+          <div class="form-group">
+            <label for="startPrice">Start Price:</label>
+            <input
+              id="startPrice"
+              v-model.number="selectedMovie.StartPrice"
+              type="number"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="viewsValue">Views value:</label>
+            <input
+              id="viewsValue"
+              v-model.number="selectedMovie.ViewsValue"
+              type="number"
+            />
+          </div>
+          <div class="form-group">
+            <label for="startPrice">Views threshold:</label>
+            <input
+              id="viewsThreshold"
+              v-model.number="selectedMovie.ViewsThreshold"
+              type="number"
+            />
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="form-btn">Save</button>
+            <button type="button" class="cancel-btn" @click="closeEditModal">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import MovieService from "@/services/MovieService";
-import MovieForm from "@/components/MovieForm.vue";
 import { useRouter } from "vue-router";
 
 export default {
-  components: { MovieForm },
   setup() {
     const router = useRouter();
     return { router };
@@ -40,6 +113,8 @@ export default {
   data() {
     return {
       movies: [],
+      isEditModalOpen: false,
+      selectedMovie: null, // Filmul selectat pentru editare
     };
   },
   methods: {
@@ -50,8 +125,41 @@ export default {
       await MovieService.deleteMovie(id);
       this.fetchMovies();
     },
-    editMovie(id) {
-      this.router.push(`/edit/${id}`); // Navigare către pagina de editare
+    openEditModal(movie) {
+      this.selectedMovie = { ...movie }; // Copiem datele filmului selectat
+      this.isEditModalOpen = true;
+    },
+    closeEditModal() {
+      this.isEditModalOpen = false;
+      this.selectedMovie = null;
+    },
+    async submitEditForm() {
+      try {
+        await MovieService.updateMovie(this.selectedMovie);
+        alert("Movie updated successfully!");
+        this.closeEditModal();
+        this.fetchMovies(); // Actualizează lista după editare
+      } catch (error) {
+        console.error("Failed to update movie:", error);
+      }
+    },
+    async incrementViews(movie) {
+      try {
+        movie.Views += 1;
+        await MovieService.addView(movie.Id); // Actualizăm filmul în backend
+      } catch (error) {
+        console.error("Failed to increment views:", error);
+      }
+    },
+    handleEditFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.selectedMovie.ImageBase64 = e.target.result; // Salvează conținutul Base64
+        };
+        reader.readAsDataURL(file); // Citește fișierul ca Base64
+      }
     },
   },
   created() {
@@ -105,6 +213,11 @@ h1 {
   padding: 15px;
 }
 
+.movie-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .movie-image {
   width: 100%;
   height: auto;
@@ -147,6 +260,7 @@ h1 {
 
 .delete-btn:hover {
   background-color: #c0392b;
+  transform: scale(1.05);
 }
 
 .no-movies {
@@ -154,5 +268,149 @@ h1 {
   font-size: 18px;
   color: #7f8c8d;
   margin-top: 20px;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.movie-card {
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.movie-image {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.form-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-btn:hover {
+  background-color: #0056b3;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background-color: #a71d2a;
+}
+
+.edit-btn {
+  background-color: #3498db; /* Verde pentru editare */
+  color: white;
+  padding: 8px 15px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3; /* Verde mai închis la hover */
+  transform: scale(1.05); /* Mărire ușoară la hover */
+}
+
+.edit-btn:active {
+  background-color: #1e7e34; /* Verde și mai închis la click */
+  transform: scale(1); /* Eliminare mărire la click */
+}
+
+.modal-content .form-group {
+  margin-bottom: 15px;
+}
+
+.modal-content label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333; /* Text întunecat */
+}
+
+.modal-content input,
+.modal-content textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+  border-color: #007bff; /* Albastru pentru câmp focus */
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+.modal-content textarea {
+  resize: vertical; /* Permite redimensionarea doar pe verticală */
+}
+
+.modal-actions .form-btn,
+.modal-actions .cancel-btn {
+  width: calc(50% - 5px); /* Asigură spațiu egal pentru cele două butoane */
+}
+
+.modal-actions .form-btn {
+  margin-right: 10px;
+}
+
+.modal-actions .cancel-btn {
+  margin-left: 10px;
 }
 </style>

@@ -24,7 +24,6 @@ namespace Infrastructure.Context
         public virtual DbSet<Option> Options { get; set; } = null!;
         public virtual DbSet<Rating> Ratings { get; set; } = null!;
         public virtual DbSet<UserMovie> UserMovies { get; set; } = null!;
-        public virtual DbSet<ViewsValue> ViewsValues { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -95,6 +94,12 @@ namespace Infrastructure.Context
                 entity.Property(e => e.Name).HasMaxLength(200);
 
                 entity.Property(e => e.VideoPath).HasMaxLength(500);
+
+                entity.Property(e => e.ViewsThreshold).HasDefaultValueSql("((100))");
+
+                entity.Property(e => e.ViewsValue)
+                    .HasColumnType("decimal(6, 3)")
+                    .HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<MoviesOption>(entity =>
@@ -151,19 +156,6 @@ namespace Infrastructure.Context
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__UserMovie__UserI__3B75D760");
-            });
-
-            modelBuilder.Entity<ViewsValue>(entity =>
-            {
-                entity.ToTable("ViewsValue");
-
-                entity.Property(e => e.Value).HasColumnType("decimal(6, 3)");
-
-                entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.ViewsValues)
-                    .HasForeignKey(d => d.MovieId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ViewsValu__Movie__5CD6CB2B");
             });
 
             OnModelCreatingPartial(modelBuilder);

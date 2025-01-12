@@ -2,13 +2,14 @@ using AutoMapper;
 using Backend.Auth;
 using Backend.Data;
 using Backend.Helpers;
+using exp.Services.Generic;
 using Infrastructure.Context;
 using Infrastructure.Repositories.Movies;
-using Infrastructure.Repositories.ViewsValueRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Models.Helpers;
 using NetflixRemake.Email;
@@ -31,6 +32,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                  .AddDefaultTokenProviders();
 
 builder.Services.AddResponseCaching();
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 builder.Services.AddAuthentication(options =>
 {
@@ -94,7 +97,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 
-builder.Services.AddScoped<IViewsValueRepository, ViewsValueRepository>();
+builder.Services.AddScoped<IGenericService, GenericService>();
 
 Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
@@ -108,6 +111,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
 
 app.UseHttpsRedirection();
 app.UseResponseCaching();
@@ -123,7 +128,19 @@ app.UseCors(x => x
         .AllowAnyHeader()
         .AllowCredentials());
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    ContentTypeProvider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider(new Dictionary<string, string>
+    {
+      { ".jpeg", "image/jpeg" },
+      { ".jpg", "image/jpg" },
+      { ".png", "image/png" },
+      { ".webp", "image/webp" },
+      { ".svg", "image/svg" },
+      { ".svg+xml", "image/svg+xml" }
+    })
+});
 app.MapControllers();
 
 app.Run();
