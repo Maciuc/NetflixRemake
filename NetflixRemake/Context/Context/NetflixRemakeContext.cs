@@ -36,6 +36,10 @@ namespace Infrastructure.Context
 
             modelBuilder.Entity<AspNetUser>(entity =>
             {
+                entity.Property(e => e.Bank)
+                    .HasColumnType("decimal(6, 3)")
+                    .HasDefaultValueSql("((99))");
+
                 entity.Property(e => e.Email).HasMaxLength(256);
 
                 entity.Property(e => e.NormalizedEmail).HasMaxLength(256);

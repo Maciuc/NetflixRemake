@@ -27,6 +27,7 @@
         public string? SecurityStamp { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public string? UserName { get; set; }
+        public decimal Bank { get; set; }
 
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }

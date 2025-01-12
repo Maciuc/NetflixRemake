@@ -5,6 +5,8 @@ using Backend.Helpers;
 using exp.Services.Generic;
 using Infrastructure.Context;
 using Infrastructure.Repositories.Movies;
+using Infrastructure.Repositories.UserMovies;
+using Infrastructure.Repositories.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,7 @@ using Models.Helpers;
 using NetflixRemake.Email;
 using Serilog;
 using Services.Movies;
+using Services.Users;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -96,6 +99,11 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IUserMoviesRepository, UserMoviesRepository>();
 
 builder.Services.AddScoped<IGenericService, GenericService>();
 

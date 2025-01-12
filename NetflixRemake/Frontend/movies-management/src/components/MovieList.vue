@@ -170,7 +170,7 @@ export default {
 <style scoped>
 .movie-list {
   padding: 20px;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
@@ -197,9 +197,12 @@ h1 {
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(300px, 1fr)
+  ); /* Grila va avea max. 3 carduri pe rând */
   gap: 20px;
-  margin-top: 20px;
+  justify-content: center; /* Centrăm cardurile dacă sunt mai puține pe rând */
 }
 
 .movie-card {
@@ -212,18 +215,18 @@ h1 {
   padding: 15px;
 }
 
+.movie-image {
+  width: 100%; /* Asigurăm că imaginea ocupă toată lățimea containerului */
+  max-width: 250px; /* Limităm lățimea maximă a imaginii */
+  height: 150px; /* Setăm o înălțime fixă pentru imagini */
+  object-fit: cover; /* Asigurăm că imaginile sunt tăiate pentru a se potrivi în container */
+  margin: 0 auto 15px; /* Centrăm imaginea și adăugăm spațiu jos */
+  border-bottom: 1px solid #ddd;
+}
+
 .movie-card:active {
   transform: scale(0.98);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.movie-image {
-  width: 100%;
-  height: auto;
-  max-height: 200px;
-  object-fit: cover;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #ddd;
 }
 
 .movie-title {

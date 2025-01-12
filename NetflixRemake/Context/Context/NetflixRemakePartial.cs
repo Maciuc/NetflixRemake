@@ -8,6 +8,7 @@ namespace Infrastructure.Context
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Movie>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<UserMovie>().HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

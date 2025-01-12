@@ -26,7 +26,7 @@ namespace Services.Movies
 
             if (movie == null)
             {
-                throw new NotFoundException("Player not found!");
+                throw new NotFoundException("Movie not found!");
             }
 
             var returnMovie = new MovieViewModel
