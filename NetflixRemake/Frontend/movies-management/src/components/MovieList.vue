@@ -10,8 +10,7 @@
         @click="incrementViews(movie)"
       >
         <img
-          v-if="movie.videoPath"
-          :src="$utils.ShowDynamicImage(video.VideoPath, 'default-img')"
+          :src="$utils.ShowDynamicImage(movie.VideoPath, 'default-img')"
           @error="$utils.ShowImageUserNotFoundOnServer"
           alt=""
           class="movie-image"
